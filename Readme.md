@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Elena Pavlova](https://up.htmlacademy.ru/javascript/8/user/54237).
-* Наставник: `Неизвестно`.
+* Наставник: `Вадим Аркадов`.
 
 ---
 
