@@ -1,0 +1,20 @@
+.upload-filter-label-phobos .upload-filter-preview,
+.filter-phobos {
+  -webkit-filter: contrast(2)
+                  saturate(5)
+                  hue-rotate(-300deg)
+                  brightness(1.5);
+  filter: contrast(2)
+          saturate(5)
+          hue-rotate(-300deg)
+          brightness(1.5);
+}
+
+.upload-filter-label-heat .upload-filter-preview,
+.filter-heat {
+  -webkit-filter: saturate(2.5)
+                  brightness(2);
+  filter: saturate(2.5)
+          brightness(2;
+}
+
