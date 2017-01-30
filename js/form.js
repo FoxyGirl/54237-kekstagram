@@ -7,6 +7,7 @@ var uploadOverlayNode = document.querySelector('.upload-overlay');
 var uploadSelectImageFormNode = document.getElementById('upload-select-image');
 var uploadFormCancelNode = uploadOverlayNode.querySelector('.upload-form-cancel');
 var uploadFileNode = document.getElementById('upload-file');
+var uploadFilterControlsNode = uploadOverlayNode.querySelector('.upload-filter-controls');
 var filterControlsNode = document.getElementsByName('upload-filter');
 var filterImagePreviewNode = uploadOverlayNode.querySelector('.filter-image-preview');
 var uploadResizeDecNode = uploadOverlayNode.querySelector('.upload-resize-controls-button-dec');
@@ -16,44 +17,51 @@ var MINRESIZE = 25;
 var MAXRESIZE = 100;
 var STEPRESIZE = 25;
 
+var resizeDecImagePreviewHandler = function () {
+  var currentValue = parseInt(uploadResizeValueNode.value.split('%').join(''), 10);
+  currentValue = currentValue > (MINRESIZE + STEPRESIZE) ? currentValue - STEPRESIZE : MINRESIZE;
+  changeImagePreviewScale(currentValue);
+};
 
-for (var i = 0; i < filterControlsNode.length; i++) {
-  clickFilter(filterControlsNode[i]);
-}
+var resizeIncImagePreviewHandler = function () {
+  var currentValue = parseInt(uploadResizeValueNode.value.split('%').join(''), 10);
+  currentValue = currentValue < (MAXRESIZE - STEPRESIZE) ? currentValue + STEPRESIZE : MAXRESIZE;
+  changeImagePreviewScale(currentValue);
+};
 
+var changeImagePreviewHandler = function (event) {
+  var target = event.target;
+
+  if (target.tagName === 'INPUT') {
+    toggleFilter(target);
+  } else {
+    return;
+  }
+};
 
 uploadFileNode.addEventListener('change', function () {
+  uploadFilterControlsNode.addEventListener('click', changeImagePreviewHandler);
+  uploadResizeDecNode.addEventListener('click', resizeDecImagePreviewHandler);
+  uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
+
+  changeImagePreviewScale(MAXRESIZE);
+
   uploadSelectImageFormNode.classList.add('invisible');
   uploadOverlayNode.classList.remove('invisible');
-
-  uploadResizeValueNode.value = MAXRESIZE + '%';
-  filterImagePreviewNode.style.transform = 'scale(' + MAXRESIZE / 100 + ')';
 });
 
 uploadFormCancelNode.addEventListener('click', function () {
   uploadOverlayNode.classList.add('invisible');
   uploadSelectImageFormNode.classList.remove('invisible');
+
   uploadFileNode.value = '';
+  filterControlsNode[0].click();
+
+  uploadFilterControlsNode.removeEventListener('click', changeImagePreviewHandler);
+  uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
+  uploadResizeIncNode.removeEventListener('click', resizeIncImagePreviewHandler);
 });
 
-uploadResizeDecNode.addEventListener('click', function () {
-  var currentValue = parseInt(uploadResizeValueNode.value.split('%').join(''), 10);
-  currentValue = (currentValue > (MINRESIZE + STEPRESIZE)) ? (currentValue - STEPRESIZE) : MINRESIZE;
-  changeImagePreview(currentValue);
-});
-
-uploadResizeIncNode.addEventListener('click', function () {
-  var currentValue = parseInt(uploadResizeValueNode.value.split('%').join(''), 10);
-  currentValue = (currentValue < (MAXRESIZE - STEPRESIZE)) ? (currentValue + STEPRESIZE) : MAXRESIZE;
-  changeImagePreview(currentValue);
-});
-
-
-function clickFilter(control) {
-  control.addEventListener('click', function () {
-    toggleFilter(control);
-  });
-}
 
 /** Change class in filterImagePreviewNode according filter control
  *
@@ -65,7 +73,7 @@ function toggleFilter(control) {
   filterName = filterName.split('upload-').join('');
   imagePreviewClasses = filterImagePreviewNode.classList;
 
-  for (i = 0; i < imagePreviewClasses.length; i++) {
+  for (var i = 0; i < imagePreviewClasses.length; i++) {
     if (imagePreviewClasses[i] !== 'filter-image-preview') {
       filterImagePreviewNode.classList.remove(imagePreviewClasses[i]);
     }
@@ -74,12 +82,11 @@ function toggleFilter(control) {
   filterImagePreviewNode.classList.add(filterName);
 }
 
-
 /** Change scale of filterImagePreviewNode and uploadResizeValue
  *
  * @param {number} scaleValue - The element with filter control ID
  */
-function changeImagePreview(scaleValue) {
+function changeImagePreviewScale(scaleValue) {
   uploadResizeValueNode.value = scaleValue + '%';
   filterImagePreviewNode.style.transform = 'scale(' + scaleValue / 100 + ')';
 }
