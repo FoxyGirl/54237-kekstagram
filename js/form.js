@@ -84,7 +84,7 @@ function toggleFilter(control) {
 
 /** Change scale of filterImagePreviewNode and uploadResizeValue
  *
- * @param {number} scaleValue - The element with filter control ID
+ * @param {number} scaleValue - The value for image scaling
  */
 function changeImagePreviewScale(scaleValue) {
   uploadResizeValueNode.value = scaleValue + '%';
