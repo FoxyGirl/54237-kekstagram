@@ -40,17 +40,8 @@ uploadFormCancelNode.addEventListener('click', hideUploadOverlayPopupHandler);
  */
 function toggleFilter(control) {
   var filterName = control.id;
-  var imagePreviewClasses;
-  filterName = filterName.split('upload-').join('');
-  imagePreviewClasses = filterImagePreviewNode.classList;
-
-  for (var i = 0; i < imagePreviewClasses.length; i++) {
-    if (imagePreviewClasses[i] !== 'filter-image-preview') {
-      filterImagePreviewNode.classList.remove(imagePreviewClasses[i]);
-    }
-  }
-
-  filterImagePreviewNode.classList.add(filterName);
+  filterName = filterName.replace('upload-', '');
+  filterImagePreviewNode.className = 'filter-image-preview' + ' ' + filterName;
 }
 
 /**
