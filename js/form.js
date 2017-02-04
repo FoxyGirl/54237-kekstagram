@@ -13,19 +13,19 @@ var filterImagePreviewNode = uploadOverlayNode.querySelector('.filter-image-prev
 var uploadResizeDecNode = uploadOverlayNode.querySelector('.upload-resize-controls-button-dec');
 var uploadResizeIncNode = uploadOverlayNode.querySelector('.upload-resize-controls-button-inc');
 var uploadResizeValueNode = uploadOverlayNode.querySelector('.upload-resize-controls-value');
-var MINRESIZE = 25;
-var MAXRESIZE = 100;
-var STEPRESIZE = 25;
+var MIN_RESIZE = 25;
+var MAX_RESIZE = 100;
+var STEP_RESIZE = 25;
 
 var resizeDecImagePreviewHandler = function () {
-  var currentValue = parseInt(uploadResizeValueNode.value.split('%').join(''), 10);
-  currentValue = currentValue > (MINRESIZE + STEPRESIZE) ? currentValue - STEPRESIZE : MINRESIZE;
+  var currentValue = parseInt(uploadResizeValueNode.value, 10);
+  currentValue = currentValue - STEP_RESIZE < MIN_RESIZE ? MIN_RESIZE : currentValue - STEP_RESIZE;
   changeImagePreviewScale(currentValue);
 };
 
 var resizeIncImagePreviewHandler = function () {
-  var currentValue = parseInt(uploadResizeValueNode.value.split('%').join(''), 10);
-  currentValue = currentValue < (MAXRESIZE - STEPRESIZE) ? currentValue + STEPRESIZE : MAXRESIZE;
+  var currentValue = parseInt(uploadResizeValueNode.value, 10);
+  currentValue = currentValue + STEP_RESIZE > MAX_RESIZE ? MAX_RESIZE : currentValue + STEP_RESIZE;
   changeImagePreviewScale(currentValue);
 };
 
@@ -44,7 +44,7 @@ uploadFileNode.addEventListener('change', function () {
   uploadResizeDecNode.addEventListener('click', resizeDecImagePreviewHandler);
   uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
 
-  changeImagePreviewScale(MAXRESIZE);
+  changeImagePreviewScale(MAX_RESIZE);
 
   uploadSelectImageFormNode.classList.add('invisible');
   uploadOverlayNode.classList.remove('invisible');
@@ -63,7 +63,8 @@ uploadFormCancelNode.addEventListener('click', function () {
 });
 
 
-/** Change class in filterImagePreviewNode according filter control
+/**
+ * Change class in filterImagePreviewNode according filter control
  *
  * @param {Element} control - The element with filter control ID
  */
@@ -82,7 +83,8 @@ function toggleFilter(control) {
   filterImagePreviewNode.classList.add(filterName);
 }
 
-/** Change scale of filterImagePreviewNode and uploadResizeValue
+/**
+ * Change scale of filterImagePreviewNode and uploadResizeValue
  *
  * @param {number} scaleValue - The value for image scaling
  */
