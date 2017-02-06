@@ -85,6 +85,7 @@ function showUploadOverlayPopupHandler() {
   uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
 
   changeImagePreviewScale(MAX_RESIZE);
+  filterControlsNode[0].click();
 
   uploadSelectImageFormNode.classList.add('invisible');
   uploadOverlayNode.classList.remove('invisible');
@@ -98,7 +99,6 @@ function hideUploadOverlayPopupHandler() {
   uploadSelectImageFormNode.classList.remove('invisible');
 
   uploadFileNode.value = '';
-  filterControlsNode[0].click();
 
   uploadFilterControlsNode.removeEventListener('click', changeImagePreviewHandler);
   uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
