@@ -17,17 +17,6 @@ var MIN_RESIZE = 25;
 var MAX_RESIZE = 100;
 var STEP_RESIZE = 25;
 
-//  Create handlers for resizing image preview
-var resizeDecImagePreviewHandler = resizeDecImagePreview();
-var resizeIncImagePreviewHandler = resizeIncImagePreview();
-
-//  Create handler for change image preview
-var changeImagePreviewHandler = changeImagePreview();
-
-//  Create handlers for showing and hiding of upload overlay pop-up
-var showUploadOverlayPopupHandler = showUploadOverlayPopup();
-var hideUploadOverlayPopupHandler = hideUploadOverlayPopup();
-
 //  Add handlers for showing and hiding of upload overlay pop-up
 uploadFileNode.addEventListener('change', showUploadOverlayPopupHandler);
 uploadFormCancelNode.addEventListener('click', hideUploadOverlayPopupHandler);
@@ -46,28 +35,20 @@ function toggleFilter(control) {
 
 /**
  * Resize with decreasing image preview
- *
- * @return {Function} - The function for callback
  */
-function resizeDecImagePreview() {
-  return function () {
-    var currentValue = parseInt(uploadResizeValueNode.value, 10);
-    currentValue = currentValue - STEP_RESIZE < MIN_RESIZE ? MIN_RESIZE : currentValue - STEP_RESIZE;
-    changeImagePreviewScale(currentValue);
-  };
+function resizeDecImagePreviewHandler() {
+  var currentValue = parseInt(uploadResizeValueNode.value, 10);
+  currentValue = currentValue - STEP_RESIZE < MIN_RESIZE ? MIN_RESIZE : currentValue - STEP_RESIZE;
+  changeImagePreviewScale(currentValue);
 }
 
 /**
  * Resize with increasing image preview
- *
- * @return {Function} - The function for callback
  */
-function resizeIncImagePreview() {
-  return function () {
-    var currentValue = parseInt(uploadResizeValueNode.value, 10);
-    currentValue = currentValue + STEP_RESIZE > MAX_RESIZE ? MAX_RESIZE : currentValue + STEP_RESIZE;
-    changeImagePreviewScale(currentValue);
-  };
+function resizeIncImagePreviewHandler() {
+  var currentValue = parseInt(uploadResizeValueNode.value, 10);
+  currentValue = currentValue + STEP_RESIZE > MAX_RESIZE ? MAX_RESIZE : currentValue + STEP_RESIZE;
+  changeImagePreviewScale(currentValue);
 }
 
 /**
@@ -83,53 +64,43 @@ function changeImagePreviewScale(scaleValue) {
 /**
  * Change image preview
  *
- * @return {Function} - The function for callback
+ * @param {Event} event - The Event
  */
-function changeImagePreview() {
-  return function (event) {
-    var target = event.target;
+function changeImagePreviewHandler(event) {
+  var target = event.target;
 
-    if (target.tagName === 'INPUT') {
-      toggleFilter(target);
-    } else {
-      return;
-    }
-  };
+  if (target.tagName === 'INPUT') {
+    toggleFilter(target);
+  } else {
+    return;
+  }
 }
 
 /**
  * Show upload overlay pop-up
- *
- * @return {Function} - The function for callback
  */
-function showUploadOverlayPopup() {
-  return function () {
-    uploadFilterControlsNode.addEventListener('click', changeImagePreviewHandler);
-    uploadResizeDecNode.addEventListener('click', resizeDecImagePreviewHandler);
-    uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
+function showUploadOverlayPopupHandler() {
+  uploadFilterControlsNode.addEventListener('click', changeImagePreviewHandler);
+  uploadResizeDecNode.addEventListener('click', resizeDecImagePreviewHandler);
+  uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
 
-    changeImagePreviewScale(MAX_RESIZE);
+  changeImagePreviewScale(MAX_RESIZE);
 
-    uploadSelectImageFormNode.classList.add('invisible');
-    uploadOverlayNode.classList.remove('invisible');
-  };
+  uploadSelectImageFormNode.classList.add('invisible');
+  uploadOverlayNode.classList.remove('invisible');
 }
 
 /**
  * Hide upload overlay pop-up
- *
- * @return {Function} - The function for callback
  */
-function hideUploadOverlayPopup() {
-  return function () {
-    uploadOverlayNode.classList.add('invisible');
-    uploadSelectImageFormNode.classList.remove('invisible');
+function hideUploadOverlayPopupHandler() {
+  uploadOverlayNode.classList.add('invisible');
+  uploadSelectImageFormNode.classList.remove('invisible');
 
-    uploadFileNode.value = '';
-    filterControlsNode[0].click();
+  uploadFileNode.value = '';
+  filterControlsNode[0].click();
 
-    uploadFilterControlsNode.removeEventListener('click', changeImagePreviewHandler);
-    uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
-    uploadResizeIncNode.removeEventListener('click', resizeIncImagePreviewHandler);
-  };
+  uploadFilterControlsNode.removeEventListener('click', changeImagePreviewHandler);
+  uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
+  uploadResizeIncNode.removeEventListener('click', resizeIncImagePreviewHandler);
 }
