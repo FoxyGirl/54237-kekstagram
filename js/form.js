@@ -66,13 +66,15 @@ function changeImagePreviewScale(scaleValue) {
  *
  * @param {Event} event - The Event
  */
+
 function changeImagePreviewHandler(event) {
   var target = event.target;
-
-  if (target.tagName === 'INPUT') {
-    toggleFilter(target);
-  } else {
-    return;
+  while (target !== uploadFilterControlsNode) {
+    if (target.tagName === 'INPUT') {
+      toggleFilter(target);
+      return;
+    }
+    target = target.parentNode;
   }
 }
 
