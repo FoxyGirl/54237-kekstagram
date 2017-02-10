@@ -155,7 +155,7 @@ function changeImagePreview(filterInput) {
  */
 function clearCheckedInputs(inputs) {
   [].forEach.call(inputs, function (input) {
-    input.removeAttribute('checked');
+    input.checked = 'false';
     uploadFilterControlsNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'false');
   });
 }
@@ -166,7 +166,7 @@ function clearCheckedInputs(inputs) {
  * @param {Element} input - DOM element input with radio or checkbox type
  */
 function setCheckedInputs(input) {
-  input.setAttribute('checked', 'true');
+  input.checked = 'true';
   uploadFilterControlsNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'true');
 }
 
