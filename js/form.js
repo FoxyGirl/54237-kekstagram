@@ -13,7 +13,7 @@ var filterImagePreviewNode = uploadNode.querySelector('.filter-image-preview');
 var uploadResizeDecNode = uploadNode.querySelector('.upload-resize-controls-button-dec');
 var uploadResizeIncNode = uploadNode.querySelector('.upload-resize-controls-button-inc');
 var uploadResizeValueNode = uploadNode.querySelector('.upload-resize-controls-value');
-var uploadFileLabel = document.querySelector('label.upload-file');
+var uploadFileLabel = document.querySelector('.upload-file');
 var uploadFilterForm = uploadNode.querySelector('.upload-filter');
 var MIN_RESIZE = 25;
 var MAX_RESIZE = 100;
@@ -25,7 +25,7 @@ var prevFocusedElement = null;
 
 uploadFileLabel.addEventListener('keydown', function () {
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE) {
-    document.getElementById(uploadFileLabel.getAttribute('for')).click();
+    event.currentTarget.click();
   }
 });
 
@@ -114,9 +114,8 @@ function resizeIncImagePreviewHandler() {
  * @param {number} scaleValue - The value for image scaling
  */
 function changeImagePreviewScale(scaleValue) {
-  uploadResizeValueNode.setAttribute('value', scaleValue + '%');
+  uploadResizeValueNode.value = scaleValue + '%';
   filterImagePreviewNode.style.transform = 'scale(' + scaleValue / 100 + ')';
-  filterImagePreviewNode.style.transition = 'ease-out 0.5s';
 }
 
 /**
