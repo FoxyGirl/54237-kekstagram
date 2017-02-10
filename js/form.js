@@ -58,6 +58,8 @@ function showUploadPopup() {
   uploadSelectImageNode.classList.add('invisible');
   uploadNode.classList.remove('invisible');
   uploadResizeDecNode.focus();
+
+  uploadNode.setAttribute('aria-hidden', 'false');
 }
 
 /**
@@ -67,6 +69,8 @@ function hideUploadPopup() {
   uploadNode.classList.add('invisible');
   uploadSelectImageNode.classList.remove('invisible');
   prevFocusedElement.focus();
+
+  uploadNode.setAttribute('aria-hidden', 'true');
 
   uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
   uploadResizeIncNode.removeEventListener('click', resizeIncImagePreviewHandler);
