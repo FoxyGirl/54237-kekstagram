@@ -15,6 +15,10 @@
   -webkit-filter: saturate(2.5)
                   brightness(2);
   filter: saturate(2.5)
-          brightness(2;
+          brightness(2);
+}
+
+.filter-image-preview {
+  transition: transform ease-out 0.5s;
 }
 

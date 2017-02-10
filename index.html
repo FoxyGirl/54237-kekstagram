@@ -23,16 +23,17 @@
 <div class="upload">
   <form class="upload-form upload-image" id="upload-select-image" method="post" enctype="multipart/form-data">
     <input type="file" id="upload-file" class="upload-input" name="filename" required>
-    <label class="upload-file upload-control" for="upload-file"></label>
+    <label class="upload-file upload-control" for="upload-file"
+           role="button" aria-label="Загрузка изображения" tabindex="1"></label>
     <button class="upload-submit upload-control" type="submit"></button>
   </form>
 
-  <div class="upload-overlay invisible">
+  <div class="upload-overlay invisible" role="dialog" aria-label="Обработка фотографии форма" aria-hidden="true">
     <form class="upload-form upload-filter" id="upload-filter" method="post" enctype="multipart/form-data">
       <fieldset class="upload-resize-controls">
-        <button type="button" class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-dec">–</button><!--
-        --><input type="text" class="upload-resize-control upload-resize-controls-value" value="55%" readonly /><!--
-        --><button type="button" class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-inc">+</button>
+        <button type="button" class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-dec" aria-label="Уменьшить изображение">–</button><!--
+        --><input type="text" class="upload-resize-control upload-resize-controls-value" value="55%" readonly aria-label="Текущий размер"/><!--
+        --><button type="button" class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-inc" aria-label="Увеличить изображение">+</button>
       </fieldset>
 
       <div class="upload-form-preview">
@@ -40,7 +41,7 @@
         <img src="img/upload-default-image.png" class="filter-image-preview">
       </div>
 
-      <fieldset class="upload-filter-controls">
+      <fieldset class="upload-filter-controls" role="radiogroup" aria-label="Выбор фильтра">
         <div class="upload-filter-level">
           <div class="upload-filter-level-line">
             <div class="upload-filter-level-pin"></div>
@@ -49,37 +50,43 @@
         </div>
 
         <input type="radio" name="upload-filter" id="upload-filter-none" value="none" checked>
-        <label class="upload-filter-label" for="upload-filter-none">
+        <label class="upload-filter-label" for="upload-filter-none"
+               role="radio" aria-checked="true" tabindex="0">
           <div class="upload-filter-preview"></div>
           Оригинал
         </label>
 
         <input type="radio" name="upload-filter" id="upload-filter-chrome" value="chrome">
-        <label class="upload-filter-label upload-filter-label-chrome" for="upload-filter-chrome">
+        <label class="upload-filter-label upload-filter-label-chrome" for="upload-filter-chrome"
+               role="radio" aria-checked="false" tabindex="0">
           <div class="upload-filter-preview"></div>
           Хром
         </label>
 
         <input type="radio" name="upload-filter" id="upload-filter-sepia" value="sepia">
-        <label class="upload-filter-label upload-filter-label-sepia" for="upload-filter-sepia">
+        <label class="upload-filter-label upload-filter-label-sepia" for="upload-filter-sepia"
+               role="radio" aria-checked="false" tabindex="0">
           <div class="upload-filter-preview"></div>
           Сепия
         </label>
 
         <input type="radio" name="upload-filter" id="upload-filter-marvin" value="marvin">
-        <label class="upload-filter-label upload-filter-label-marvin" for="upload-filter-marvin">
+        <label class="upload-filter-label upload-filter-label-marvin" for="upload-filter-marvin"
+               role="radio" aria-checked="false" tabindex="0">
           <div class="upload-filter-preview"></div>
           Марвин
         </label>
 
         <input type="radio" name="upload-filter" id="upload-filter-phobos" value="phobos">
-        <label class="upload-filter-label upload-filter-label-phobos" for="upload-filter-phobos">
+        <label class="upload-filter-label upload-filter-label-phobos" for="upload-filter-phobos"
+               role="radio" aria-checked="false" tabindex="0">
           <div class="upload-filter-preview"></div>
           Фобос
         </label>
 
         <input type="radio" name="upload-filter" id="upload-filter-heat" value="heat">
-        <label class="upload-filter-label upload-filter-label-heat" for="upload-filter-heat">
+        <label class="upload-filter-label upload-filter-label-heat" for="upload-filter-heat"
+               role="radio" aria-checked="false" tabindex="0">
           <div class="upload-filter-preview"></div>
           Зной
         </label>
@@ -87,7 +94,7 @@
 
       <textarea class="upload-form-description" name="upload-description" placeholder="Ваш комментарий..."></textarea>
 
-      <button class="upload-form-cancel" type="reset" id="upload-cancel"></button>
+      <button class="upload-form-cancel" type="reset" id="upload-cancel" aria-label="Закрыть форму"></button>
       <button class="upload-form-submit" type="submit" id="upload-submit">Отправить</button>
     </form>
   </div>
