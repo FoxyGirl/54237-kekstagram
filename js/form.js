@@ -13,7 +13,7 @@ var filterImagePreviewNode = uploadNode.querySelector('.filter-image-preview');
 var uploadResizeDecNode = uploadNode.querySelector('.upload-resize-controls-button-dec');
 var uploadResizeIncNode = uploadNode.querySelector('.upload-resize-controls-button-inc');
 var uploadResizeValueNode = uploadNode.querySelector('.upload-resize-controls-value');
-var uploadFileLabel = document.querySelector('.upload-file');
+var uploadFileLabelNode = document.querySelector('.upload-file');
 var uploadFilterForm = uploadNode.querySelector('.upload-filter');
 var MIN_RESIZE = 25;
 var MAX_RESIZE = 100;
@@ -23,7 +23,7 @@ var ESCAPE_KEY_CODE = 27;
 var SPACE_KEY_CODE = 32;
 var prevFocusedElement = null;
 
-uploadFileLabel.addEventListener('keydown', function () {
+uploadFileLabelNode.addEventListener('keydown', function () {
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE) {
     event.currentTarget.click();
   }
@@ -42,9 +42,8 @@ function showUploadPopup() {
   uploadResizeDecNode.addEventListener('click', resizeDecImagePreviewHandler);
   uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
 
-  uploadFilterControlsNode.addEventListener('click', changeImagePreviewHandler);
-  uploadFilterControlsNode.addEventListener('keydown', changeImagePreviewHandler);
-  uploadFilterControlsNode.addEventListener('keydown', preventDefaultOfSpaseHandler);
+  uploadFilterControlsNode.addEventListener('click', filterClickHandler);
+  uploadFilterControlsNode.addEventListener('keydown', filterClickHandler);
 
   uploadFormCancelNode.addEventListener('click', hideUploadPopupHandler);
   uploadNode.addEventListener('keydown', closeSetupModalKeyHandler);
@@ -75,9 +74,8 @@ function hideUploadPopup() {
   uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
   uploadResizeIncNode.removeEventListener('click', resizeIncImagePreviewHandler);
 
-  uploadFilterControlsNode.removeEventListener('click', changeImagePreviewHandler);
-  uploadFilterControlsNode.removeEventListener('keydown', changeImagePreviewHandler);
-  uploadFilterControlsNode.removeEventListener('keydown', preventDefaultOfSpaseHandler);
+  uploadFilterControlsNode.removeEventListener('click', filterClickHandler);
+  uploadFilterControlsNode.removeEventListener('keydown', filterClickHandler);
 
   uploadFormCancelNode.removeEventListener('click', hideUploadPopupHandler);
   uploadNode.removeEventListener('keydown', closeSetupModalKeyHandler);
@@ -127,7 +125,12 @@ function changeImagePreviewScale(scaleValue) {
  *
  * @param {Event} event - The Event
  */
-function changeImagePreviewHandler(event) {
+function filterClickHandler(event) {
+  if (event.keyCode === SPACE_KEY_CODE) {
+    event.preventDefault(); // Чтобы не скролилось окно
+    event.stopPropagation(); // Чтобы не дошло до window
+  }
+
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE || event.type === 'click') {
     var target = event.target;
     while (target !== uploadFilterControlsNode) {
@@ -159,7 +162,7 @@ function changeImagePreview(filterInput) {
  */
 function clearCheckedInputs(inputs) {
   [].forEach.call(inputs, function (input) {
-    input.checked = 'false';
+    input.checked = false;
     uploadFilterControlsNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'false');
   });
 }
@@ -170,7 +173,7 @@ function clearCheckedInputs(inputs) {
  * @param {Element} input - DOM element input with radio or checkbox type
  */
 function setCheckedInputs(input) {
-  input.checked = 'true';
+  input.checked = true;
   uploadFilterControlsNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'true');
 }
 
@@ -183,18 +186,6 @@ function toggleFilter(control) {
   var filterName = control.id;
   filterName = filterName.replace('upload-', '');
   filterImagePreviewNode.className = 'filter-image-preview' + ' ' + filterName;
-}
-
-/**
- * Prevent default of Spase key
- *
- * @param {Event} event - The Event
- */
-function preventDefaultOfSpaseHandler(event) {
-  if (event.keyCode === SPACE_KEY_CODE) {
-    event.preventDefault(); // Чтобы не скролилось окно
-    event.stopPropagation(); // Чтобы не дошло до window
-  }
 }
 
 /**
@@ -213,7 +204,6 @@ function closeSetupModalKeyHandler(event) {
  */
 function lockModalHandler() {
   if (!uploadNode.contains(document.activeElement)) {
-    console.log('!!!!' + document.activeElement); // eslint-disable-line
     uploadResizeDecNode.focus();
   }
 }
@@ -225,6 +215,5 @@ function lockModalHandler() {
  */
 function closeSubmitModalHandler(event) {
   event.preventDefault();
-  console.log('Тут мы отправляем форму как-то и закрываем окно!!!'); // eslint-disable-line
   hideUploadPopup();
 }
