@@ -9,19 +9,17 @@ var uploadFormCancelNode = uploadNode.querySelector('.upload-form-cancel');
 var uploadFileNode = document.getElementById('upload-file');
 var uploadFilterControlsNode = uploadNode.querySelector('.upload-filter-controls');
 var filterControlsNode = document.getElementsByName('upload-filter');
-var filterImagePreviewNode = uploadNode.querySelector('.filter-image-preview');
 var uploadResizeDecNode = uploadNode.querySelector('.upload-resize-controls-button-dec');
-var uploadResizeIncNode = uploadNode.querySelector('.upload-resize-controls-button-inc');
-var uploadResizeValueNode = uploadNode.querySelector('.upload-resize-controls-value');
 var uploadFileLabelNode = document.querySelector('.upload-file');
 var uploadFilterForm = uploadNode.querySelector('.upload-filter');
-var MIN_RESIZE = 25;
-var MAX_RESIZE = 100;
+var scaleElemNode = uploadNode.querySelector('.upload-resize-controls');
+var START_RESIZE = 100;
 var STEP_RESIZE = 25;
 var ENTER_KEY_CODE = 13;
 var ESCAPE_KEY_CODE = 27;
 var SPACE_KEY_CODE = 32;
 var prevFocusedElement = null;
+var Scale = null;
 
 uploadFileLabelNode.addEventListener('keydown', function () {
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE) {
@@ -39,9 +37,6 @@ uploadFileNode.addEventListener('change', function () {
 function showUploadPopup() {
   prevFocusedElement = document.activeElement;
 
-  uploadResizeDecNode.addEventListener('click', resizeDecImagePreviewHandler);
-  uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
-
   uploadFilterControlsNode.addEventListener('click', filterClickHandler);
   uploadFilterControlsNode.addEventListener('keydown', filterClickHandler);
 
@@ -51,8 +46,8 @@ function showUploadPopup() {
 
   document.addEventListener('focus', lockModalHandler, true);
 
-  changeImagePreviewScale(MAX_RESIZE);
   window.initializeFilters(filterControlsNode[0]);
+  Scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
 
   uploadSelectImageNode.classList.add('invisible');
   uploadNode.classList.remove('invisible');
@@ -71,8 +66,7 @@ function hideUploadPopup() {
 
   uploadNode.setAttribute('aria-hidden', 'true');
 
-  uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
-  uploadResizeIncNode.removeEventListener('click', resizeIncImagePreviewHandler);
+  Scale.removeScale();
 
   uploadFilterControlsNode.removeEventListener('click', filterClickHandler);
   uploadFilterControlsNode.removeEventListener('keydown', filterClickHandler);
@@ -90,34 +84,6 @@ function hideUploadPopup() {
 function hideUploadPopupHandler() {
   uploadFileNode.value = '';
   hideUploadPopup();
-}
-
-/**
- * Resize with decreasing image preview
- */
-function resizeDecImagePreviewHandler() {
-  var currentValue = parseInt(uploadResizeValueNode.value, 10);
-  currentValue = currentValue - STEP_RESIZE < MIN_RESIZE ? MIN_RESIZE : currentValue - STEP_RESIZE;
-  changeImagePreviewScale(currentValue);
-}
-
-/**
- * Resize with increasing image preview
- */
-function resizeIncImagePreviewHandler() {
-  var currentValue = parseInt(uploadResizeValueNode.value, 10);
-  currentValue = currentValue + STEP_RESIZE > MAX_RESIZE ? MAX_RESIZE : currentValue + STEP_RESIZE;
-  changeImagePreviewScale(currentValue);
-}
-
-/**
- * Change scale of filterImagePreviewNode and uploadResizeValue
- *
- * @param {number} scaleValue - The value for image scaling
- */
-function changeImagePreviewScale(scaleValue) {
-  uploadResizeValueNode.value = scaleValue + '%';
-  filterImagePreviewNode.style.transform = 'scale(' + scaleValue / 100 + ')';
 }
 
 /**
