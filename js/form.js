@@ -9,21 +9,19 @@ var uploadFormCancelNode = uploadNode.querySelector('.upload-form-cancel');
 var uploadFileNode = document.getElementById('upload-file');
 var uploadFilterControlsNode = uploadNode.querySelector('.upload-filter-controls');
 var filterControlsNode = document.getElementsByName('upload-filter');
-var filterImagePreviewNode = uploadNode.querySelector('.filter-image-preview');
 var uploadResizeDecNode = uploadNode.querySelector('.upload-resize-controls-button-dec');
-var uploadResizeIncNode = uploadNode.querySelector('.upload-resize-controls-button-inc');
-var uploadResizeValueNode = uploadNode.querySelector('.upload-resize-controls-value');
-var uploadFileLabel = document.querySelector('.upload-file');
+var uploadFileLabelNode = document.querySelector('.upload-file');
 var uploadFilterForm = uploadNode.querySelector('.upload-filter');
-var MIN_RESIZE = 25;
-var MAX_RESIZE = 100;
+var scaleElemNode = uploadNode.querySelector('.upload-resize-controls');
+var START_RESIZE = 100;
 var STEP_RESIZE = 25;
 var ENTER_KEY_CODE = 13;
 var ESCAPE_KEY_CODE = 27;
 var SPACE_KEY_CODE = 32;
 var prevFocusedElement = null;
+var Scale = null;
 
-uploadFileLabel.addEventListener('keydown', function () {
+uploadFileLabelNode.addEventListener('keydown', function () {
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE) {
     event.currentTarget.click();
   }
@@ -39,12 +37,8 @@ uploadFileNode.addEventListener('change', function () {
 function showUploadPopup() {
   prevFocusedElement = document.activeElement;
 
-  uploadResizeDecNode.addEventListener('click', resizeDecImagePreviewHandler);
-  uploadResizeIncNode.addEventListener('click', resizeIncImagePreviewHandler);
-
-  uploadFilterControlsNode.addEventListener('click', changeImagePreviewHandler);
-  uploadFilterControlsNode.addEventListener('keydown', changeImagePreviewHandler);
-  uploadFilterControlsNode.addEventListener('keydown', preventDefaultOfSpaseHandler);
+  uploadFilterControlsNode.addEventListener('click', filterClickHandler);
+  uploadFilterControlsNode.addEventListener('keydown', filterClickHandler);
 
   uploadFormCancelNode.addEventListener('click', hideUploadPopupHandler);
   uploadNode.addEventListener('keydown', closeSetupModalKeyHandler);
@@ -52,8 +46,8 @@ function showUploadPopup() {
 
   document.addEventListener('focus', lockModalHandler, true);
 
-  changeImagePreviewScale(MAX_RESIZE);
-  changeImagePreview(filterControlsNode[0]);
+  window.initializeFilters(filterControlsNode[0]);
+  Scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
 
   uploadSelectImageNode.classList.add('invisible');
   uploadNode.classList.remove('invisible');
@@ -72,12 +66,10 @@ function hideUploadPopup() {
 
   uploadNode.setAttribute('aria-hidden', 'true');
 
-  uploadResizeDecNode.removeEventListener('click', resizeDecImagePreviewHandler);
-  uploadResizeIncNode.removeEventListener('click', resizeIncImagePreviewHandler);
+  Scale.removeScale();
 
-  uploadFilterControlsNode.removeEventListener('click', changeImagePreviewHandler);
-  uploadFilterControlsNode.removeEventListener('keydown', changeImagePreviewHandler);
-  uploadFilterControlsNode.removeEventListener('keydown', preventDefaultOfSpaseHandler);
+  uploadFilterControlsNode.removeEventListener('click', filterClickHandler);
+  uploadFilterControlsNode.removeEventListener('keydown', filterClickHandler);
 
   uploadFormCancelNode.removeEventListener('click', hideUploadPopupHandler);
   uploadNode.removeEventListener('keydown', closeSetupModalKeyHandler);
@@ -95,105 +87,26 @@ function hideUploadPopupHandler() {
 }
 
 /**
- * Resize with decreasing image preview
- */
-function resizeDecImagePreviewHandler() {
-  var currentValue = parseInt(uploadResizeValueNode.value, 10);
-  currentValue = currentValue - STEP_RESIZE < MIN_RESIZE ? MIN_RESIZE : currentValue - STEP_RESIZE;
-  changeImagePreviewScale(currentValue);
-}
-
-/**
- * Resize with increasing image preview
- */
-function resizeIncImagePreviewHandler() {
-  var currentValue = parseInt(uploadResizeValueNode.value, 10);
-  currentValue = currentValue + STEP_RESIZE > MAX_RESIZE ? MAX_RESIZE : currentValue + STEP_RESIZE;
-  changeImagePreviewScale(currentValue);
-}
-
-/**
- * Change scale of filterImagePreviewNode and uploadResizeValue
- *
- * @param {number} scaleValue - The value for image scaling
- */
-function changeImagePreviewScale(scaleValue) {
-  uploadResizeValueNode.value = scaleValue + '%';
-  filterImagePreviewNode.style.transform = 'scale(' + scaleValue / 100 + ')';
-}
-
-/**
  * Change image preview
  *
  * @param {Event} event - The Event
  */
-function changeImagePreviewHandler(event) {
+function filterClickHandler(event) {
+  if (event.keyCode === SPACE_KEY_CODE) {
+    event.preventDefault(); // Чтобы не скролилось окно
+    event.stopPropagation(); // Чтобы не дошло до window
+  }
+
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE || event.type === 'click') {
     var target = event.target;
     while (target !== uploadFilterControlsNode) {
       if (target.tagName === 'LABEL') {
         var filterInput = document.getElementById(target.getAttribute('for'));
-        changeImagePreview(filterInput);
+        window.initializeFilters(filterInput);
         return;
       }
       target = target.parentNode;
     }
-  }
-}
-
-/**
- * Change Image Preview
- *
- * @param {Element} filterInput - Filter input
- */
-function changeImagePreview(filterInput) {
-  clearCheckedInputs(filterControlsNode);
-  setCheckedInputs(filterInput);
-  toggleFilter(filterInput);
-}
-
-/**
- * Clear checked attributes for inputs in DOM collection
- *
- * @param {Elements} inputs - DOM collection of inputs with radio or checkbox type
- */
-function clearCheckedInputs(inputs) {
-  [].forEach.call(inputs, function (input) {
-    input.checked = 'false';
-    uploadFilterControlsNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'false');
-  });
-}
-
-/**
- * Set checked attributes for input
- *
- * @param {Element} input - DOM element input with radio or checkbox type
- */
-function setCheckedInputs(input) {
-  input.checked = 'true';
-  uploadFilterControlsNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'true');
-}
-
-/**
- * Change class in filterImagePreviewNode according filter control
- *
- * @param {Element} control - The element with filter control ID
- */
-function toggleFilter(control) {
-  var filterName = control.id;
-  filterName = filterName.replace('upload-', '');
-  filterImagePreviewNode.className = 'filter-image-preview' + ' ' + filterName;
-}
-
-/**
- * Prevent default of Spase key
- *
- * @param {Event} event - The Event
- */
-function preventDefaultOfSpaseHandler(event) {
-  if (event.keyCode === SPACE_KEY_CODE) {
-    event.preventDefault(); // Чтобы не скролилось окно
-    event.stopPropagation(); // Чтобы не дошло до window
   }
 }
 
@@ -213,7 +126,6 @@ function closeSetupModalKeyHandler(event) {
  */
 function lockModalHandler() {
   if (!uploadNode.contains(document.activeElement)) {
-    console.log('!!!!' + document.activeElement); // eslint-disable-line
     uploadResizeDecNode.focus();
   }
 }
@@ -225,6 +137,5 @@ function lockModalHandler() {
  */
 function closeSubmitModalHandler(event) {
   event.preventDefault();
-  console.log('Тут мы отправляем форму как-то и закрываем окно!!!'); // eslint-disable-line
   hideUploadPopup();
 }
