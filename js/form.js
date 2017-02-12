@@ -7,8 +7,6 @@ var uploadNode = document.querySelector('.upload-overlay');
 var uploadSelectImageNode = document.getElementById('upload-select-image');
 var uploadFormCancelNode = uploadNode.querySelector('.upload-form-cancel');
 var uploadFileNode = document.getElementById('upload-file');
-var uploadFilterControlsNode = uploadNode.querySelector('.upload-filter-controls');
-var filterControlsNode = document.getElementsByName('upload-filter');
 var uploadResizeDecNode = uploadNode.querySelector('.upload-resize-controls-button-dec');
 var uploadFileLabelNode = document.querySelector('.upload-file');
 var uploadFilterForm = uploadNode.querySelector('.upload-filter');
@@ -19,7 +17,8 @@ var ENTER_KEY_CODE = 13;
 var ESCAPE_KEY_CODE = 27;
 var SPACE_KEY_CODE = 32;
 var prevFocusedElement = null;
-var Scale = null;
+var Scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
+var Filters = window.initializeFilters;
 
 uploadFileLabelNode.addEventListener('keydown', function () {
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE) {
@@ -37,17 +36,14 @@ uploadFileNode.addEventListener('change', function () {
 function showUploadPopup() {
   prevFocusedElement = document.activeElement;
 
-  uploadFilterControlsNode.addEventListener('click', filterClickHandler);
-  uploadFilterControlsNode.addEventListener('keydown', filterClickHandler);
-
   uploadFormCancelNode.addEventListener('click', hideUploadPopupHandler);
   uploadNode.addEventListener('keydown', closeSetupModalKeyHandler);
   uploadFilterForm.addEventListener('submit', closeSubmitModalHandler);
 
   document.addEventListener('focus', lockModalHandler, true);
 
-  window.initializeFilters(filterControlsNode[0]);
-  Scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
+  Scale.init();
+  Filters.init();
 
   uploadSelectImageNode.classList.add('invisible');
   uploadNode.classList.remove('invisible');
@@ -66,10 +62,8 @@ function hideUploadPopup() {
 
   uploadNode.setAttribute('aria-hidden', 'true');
 
-  Scale.removeScale();
-
-  uploadFilterControlsNode.removeEventListener('click', filterClickHandler);
-  uploadFilterControlsNode.removeEventListener('keydown', filterClickHandler);
+  Scale.remove();
+  Filters.remove();
 
   uploadFormCancelNode.removeEventListener('click', hideUploadPopupHandler);
   uploadNode.removeEventListener('keydown', closeSetupModalKeyHandler);
@@ -84,30 +78,6 @@ function hideUploadPopup() {
 function hideUploadPopupHandler() {
   uploadFileNode.value = '';
   hideUploadPopup();
-}
-
-/**
- * Change image preview
- *
- * @param {Event} event - The Event
- */
-function filterClickHandler(event) {
-  if (event.keyCode === SPACE_KEY_CODE) {
-    event.preventDefault(); // Чтобы не скролилось окно
-    event.stopPropagation(); // Чтобы не дошло до window
-  }
-
-  if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE || event.type === 'click') {
-    var target = event.target;
-    while (target !== uploadFilterControlsNode) {
-      if (target.tagName === 'LABEL') {
-        var filterInput = document.getElementById(target.getAttribute('for'));
-        window.initializeFilters(filterInput);
-        return;
-      }
-      target = target.parentNode;
-    }
-  }
 }
 
 /**
