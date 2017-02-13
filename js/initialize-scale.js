@@ -4,8 +4,7 @@
 'use strict';
 
 /**
- * Create Scale widget.
- *
+ * @module Create Scale widget.
  * @param {Element} element - The element with scaling controls.
  * @param {number} step - Step of scaling.
  * @param {number} startValue - Start value of widget.
@@ -14,26 +13,25 @@
  * remove - Remove handlers.
  * */
 window.createScale = (function () {
+  var MIN_RESIZE = 25;
+  var MAX_RESIZE = 100;
+
   return function (element, step, startValue) {
-    var MIN_RESIZE = 25;
-    var MAX_RESIZE = 100;
-    var STEP_RESIZE = step;
-    var START_VALUE = startValue;
-    var decrementElementNode = element.querySelector('.upload-resize-controls-button-dec');
-    var incrementElementNode = element.querySelector('.upload-resize-controls-button-inc');
+    var decrementNode = element.querySelector('.upload-resize-controls-button-dec');
+    var incrementNode = element.querySelector('.upload-resize-controls-button-inc');
     var resizeValueNode = element.querySelector('.upload-resize-controls-value');
     var filterImagePreviewNode = document.querySelector('.filter-image-preview');
 
     return {
       init: function () {
-        changeImagePreviewScale(START_VALUE);
+        changeImagePreviewScale(startValue);
 
-        decrementElementNode.addEventListener('click', resizeDecImagePreviewHandler);
-        incrementElementNode.addEventListener('click', resizeIncImagePreviewHandler);
+        decrementNode.addEventListener('click', resizeDecImagePreviewHandler);
+        incrementNode.addEventListener('click', resizeIncImagePreviewHandler);
       },
       remove: function () {
-        decrementElementNode.removeEventListener('click', resizeDecImagePreviewHandler);
-        incrementElementNode.removeEventListener('click', resizeIncImagePreviewHandler);
+        decrementNode.removeEventListener('click', resizeDecImagePreviewHandler);
+        incrementNode.removeEventListener('click', resizeIncImagePreviewHandler);
       }
     };
 
@@ -43,7 +41,7 @@ window.createScale = (function () {
      */
     function resizeDecImagePreviewHandler() {
       var currentValue = parseInt(resizeValueNode.value, 10);
-      currentValue = currentValue - STEP_RESIZE < MIN_RESIZE ? MIN_RESIZE : currentValue - STEP_RESIZE;
+      currentValue = currentValue - step < MIN_RESIZE ? MIN_RESIZE : currentValue - step;
       changeImagePreviewScale(currentValue);
     }
 
@@ -53,14 +51,13 @@ window.createScale = (function () {
      */
     function resizeIncImagePreviewHandler() {
       var currentValue = parseInt(resizeValueNode.value, 10);
-      currentValue = currentValue + STEP_RESIZE > MAX_RESIZE ? MAX_RESIZE : currentValue + STEP_RESIZE;
+      currentValue = currentValue + step > MAX_RESIZE ? MAX_RESIZE : currentValue + step;
       changeImagePreviewScale(currentValue);
     }
 
     /**
      * Change scale of filterImagePreviewNode and uploadResizeValue
      * @private
-     *
      * @param {number} scaleValue - The value for image scaling
      */
     function changeImagePreviewScale(scaleValue) {

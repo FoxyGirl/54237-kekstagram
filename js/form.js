@@ -17,8 +17,8 @@ var ENTER_KEY_CODE = 13;
 var ESCAPE_KEY_CODE = 27;
 var SPACE_KEY_CODE = 32;
 var prevFocusedElement = null;
-var Scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
-var Filters = window.initializeFilters;
+var scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
+var filters = window.initializeFilters;
 
 uploadFileLabelNode.addEventListener('keydown', function () {
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE) {
@@ -42,8 +42,8 @@ function showUploadPopup() {
 
   document.addEventListener('focus', lockModalHandler, true);
 
-  Scale.init();
-  Filters.init();
+  scale.init();
+  filters.init();
 
   uploadSelectImageNode.classList.add('invisible');
   uploadNode.classList.remove('invisible');
@@ -62,8 +62,8 @@ function hideUploadPopup() {
 
   uploadNode.setAttribute('aria-hidden', 'true');
 
-  Scale.remove();
-  Filters.remove();
+  scale.remove();
+  filters.remove();
 
   uploadFormCancelNode.removeEventListener('click', hideUploadPopupHandler);
   uploadNode.removeEventListener('keydown', closeSetupModalKeyHandler);

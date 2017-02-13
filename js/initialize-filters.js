@@ -18,6 +18,10 @@ window.initializeFilters = (function () {
   var ENTER_KEY_CODE = 13;
   var SPACE_KEY_CODE = 32;
 
+  // return function () {
+  //
+  // };
+
   return {
     init: function () {
       uploadFilterControlsNode.addEventListener('click', filterClickHandler);
