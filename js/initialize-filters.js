@@ -4,9 +4,8 @@
 'use strict';
 
 /**
- * Create Filters widget.
- *
- * @return {Object} - It has methods:
+ * @module Filters widget.
+ * @return {Function) - It returns {Object} - which has methods:
  * init - Init fist filter and add handlers.
  * remove - Remove handlers.
  */
@@ -18,27 +17,24 @@ window.initializeFilters = (function () {
   var ENTER_KEY_CODE = 13;
   var SPACE_KEY_CODE = 32;
 
-  // return function () {
-  //
-  // };
+  return function () {
+    return {
+      init: function () {
+        uploadFilterControlsNode.addEventListener('click', filterClickHandler);
+        uploadFilterControlsNode.addEventListener('keydown', filterClickHandler);
 
-  return {
-    init: function () {
-      uploadFilterControlsNode.addEventListener('click', filterClickHandler);
-      uploadFilterControlsNode.addEventListener('keydown', filterClickHandler);
-
-      changeImagePreview(filterControlsNode[0]);
-    },
-    remove: function () {
-      uploadFilterControlsNode.removeEventListener('click', filterClickHandler);
-      uploadFilterControlsNode.removeEventListener('keydown', filterClickHandler);
-    }
+        changeImagePreview(filterControlsNode[0]);
+      },
+      remove: function () {
+        uploadFilterControlsNode.removeEventListener('click', filterClickHandler);
+        uploadFilterControlsNode.removeEventListener('keydown', filterClickHandler);
+      }
+    };
   };
 
   /**
    * Change Image Preview
    * @private
-   *
    * @param {Element} filterInput - Filter input
    */
   function changeImagePreview(filterInput) {
@@ -50,7 +46,6 @@ window.initializeFilters = (function () {
   /**
    * Clear checked attributes for inputs in DOM collection
    * @private
-   *
    * @param {Elements} inputs - DOM collection of inputs with radio or checkbox type
    */
   function clearCheckedInputs(inputs) {
@@ -63,7 +58,6 @@ window.initializeFilters = (function () {
   /**
    * Set checked attributes for input
    * @private
-   *
    * @param {Element} input - DOM element input with radio or checkbox type
    */
   function setCheckedInputs(input) {
@@ -74,7 +68,6 @@ window.initializeFilters = (function () {
   /**
    * Change class in filterImagePreviewNode according filter control
    * @private
-   *
    * @param {Element} control - The element with filter control ID
    */
   function toggleFilter(control) {
@@ -86,7 +79,6 @@ window.initializeFilters = (function () {
   /**
    * Change image preview
    * @private
-   *
    * @param {Event} event - The Event
    */
   function filterClickHandler(event) {

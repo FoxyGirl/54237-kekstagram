@@ -18,7 +18,7 @@ var ESCAPE_KEY_CODE = 27;
 var SPACE_KEY_CODE = 32;
 var prevFocusedElement = null;
 var scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
-var filters = window.initializeFilters;
+var filters = window.initializeFilters();
 
 uploadFileLabelNode.addEventListener('keydown', function () {
   if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE) {
