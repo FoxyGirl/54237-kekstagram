@@ -4,23 +4,48 @@
 'use strict';
 
 /**
- * Change image preview according filter.
- *
- * @param {Element} filterInput - Filter input.
+ * @module Filters widget.
+ * @return {Function) - It returns {Object} - which has methods:
+ * init - Init fist filter and add handlers.
+ * remove - Remove handlers.
  */
-window.initializeFilters = function (filterInput) {
+window.initializeFilters = (function () {
   var uploadNode = document.querySelector('.upload-overlay');
   var uploadFilterControlsNode = uploadNode.querySelector('.upload-filter-controls');
   var filterControlsNode = document.getElementsByName('upload-filter');
   var filterImagePreviewNode = uploadNode.querySelector('.filter-image-preview');
+  var ENTER_KEY_CODE = 13;
+  var SPACE_KEY_CODE = 32;
 
-  clearCheckedInputs(filterControlsNode);
-  setCheckedInputs(filterInput);
-  toggleFilter(filterInput);
+  return function () {
+    return {
+      init: function () {
+        uploadFilterControlsNode.addEventListener('click', filterClickHandler);
+        uploadFilterControlsNode.addEventListener('keydown', filterClickHandler);
+
+        changeImagePreview(filterControlsNode[0]);
+      },
+      remove: function () {
+        uploadFilterControlsNode.removeEventListener('click', filterClickHandler);
+        uploadFilterControlsNode.removeEventListener('keydown', filterClickHandler);
+      }
+    };
+  };
+
+  /**
+   * Change Image Preview
+   * @private
+   * @param {Element} filterInput - Filter input
+   */
+  function changeImagePreview(filterInput) {
+    clearCheckedInputs(filterControlsNode);
+    setCheckedInputs(filterInput);
+    toggleFilter(filterInput);
+  }
 
   /**
    * Clear checked attributes for inputs in DOM collection
-   *
+   * @private
    * @param {Elements} inputs - DOM collection of inputs with radio or checkbox type
    */
   function clearCheckedInputs(inputs) {
@@ -32,7 +57,7 @@ window.initializeFilters = function (filterInput) {
 
   /**
    * Set checked attributes for input
-   *
+   * @private
    * @param {Element} input - DOM element input with radio or checkbox type
    */
   function setCheckedInputs(input) {
@@ -42,7 +67,7 @@ window.initializeFilters = function (filterInput) {
 
   /**
    * Change class in filterImagePreviewNode according filter control
-   *
+   * @private
    * @param {Element} control - The element with filter control ID
    */
   function toggleFilter(control) {
@@ -51,4 +76,27 @@ window.initializeFilters = function (filterInput) {
     filterImagePreviewNode.className = 'filter-image-preview' + ' ' + filterName;
   }
 
-};
+  /**
+   * Change image preview
+   * @private
+   * @param {Event} event - The Event
+   */
+  function filterClickHandler(event) {
+    if (event.keyCode === SPACE_KEY_CODE) {
+      event.preventDefault(); // Чтобы не скролилось окно
+      event.stopPropagation(); // Чтобы не дошло до window
+    }
+
+    if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE || event.type === 'click') {
+      var target = event.target;
+      while (target !== uploadFilterControlsNode) {
+        if (target.tagName === 'LABEL') {
+          var filterInput = document.getElementById(target.getAttribute('for'));
+          changeImagePreview(filterInput);
+          return;
+        }
+        target = target.parentNode;
+      }
+    }
+  }
+})();
