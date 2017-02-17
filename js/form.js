@@ -9,9 +9,10 @@
   var uploadFileLabelNode = document.querySelector('.upload-file');
   var uploadFilterForm = uploadNode.querySelector('.upload-filter');
   var scaleElemNode = uploadNode.querySelector('.upload-resize-controls');
+  var filterImagePreviewNode = document.querySelector('.filter-image-preview');
   var START_RESIZE = 100;
   var STEP_RESIZE = 25;
-  var scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE);
+  var scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE, changeImagePreviewScale);
   var filters = window.initializeFilters();
 
   uploadFileLabelNode.addEventListener('keydown', onSetupKeydownHandler);
@@ -20,6 +21,14 @@
     window.openFormModal();
     initUploadPopup();
   });
+
+  /**
+    * Change scale of filterImagePreviewNode
+    * @param {number} scaleValue - The value for image scaling
+    */
+  function changeImagePreviewScale(scaleValue) {
+    filterImagePreviewNode.style.transform = 'scale(' + scaleValue / 100 + ')';
+  }
 
   /**
    * Handler for keydown.
