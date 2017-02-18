@@ -5,9 +5,9 @@
 
 /**
  * @module load
- * @return {Function) - It returns {Object} - which has methods:
- * init - Init fist filter and add handlers.
- * remove - Remove handlers.
+ * @return {Function) - Create XMLHttpRequest.
+ * @param {string} url - The url for XMLHttpRequest.
+ * @param {Function} onLoad - Callback function.
  */
 window.load = (function () {
   var xhr = null;
@@ -40,7 +40,7 @@ window.load = (function () {
     /**
      * Console error message
      * @private
-     * @param {object | string} err - Error message or error object
+     * @param {object | string} err - Error message or error object.
      */
     function errorHandler(err) {
       console.log(err); //eslint-disable-line

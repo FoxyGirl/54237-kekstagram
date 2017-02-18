@@ -5,9 +5,7 @@
 
 /**
  * @module pictures
- * @return {Function) - It returns {Object} - which has methods:
- * init - Init fist filter and add handlers.
- * remove - Remove handlers.
+ * @return {Function) - Create pictures block from template.
  */
 window.pictures = (function () {
   var picturesNode = document.querySelector('.pictures');
@@ -22,6 +20,11 @@ window.pictures = (function () {
 
     window.load(url, onLoad);
 
+    /**
+     * CCreate pictures block
+     * @private
+     * @param {Array} data - Data for picture elements.
+     */
     function onLoad(data) {
       pictures = data;
 
