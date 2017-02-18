@@ -16,7 +16,6 @@
   var START_RESIZE = 100;
   var STEP_RESIZE = 25;
   var prevFocusedElement = null;
-  // var url = 'https://intensive-javascript-server-myophkugvq.now.sh/kekstagram/data';
   var scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE, changeImagePreviewScale);
   var filters = window.initializeFilters(applyFilterImagePreview);
 
@@ -30,12 +29,8 @@
     }
   });
 
+  //  Create pictures block
   window.pictures();
-  // window.load(url, onLoad);
-  //
-  // function onLoad(data) {
-  //   console.log('Loading finished /\n' + data);
-  // }
 
   /**
     * Change scale of filterImagePreviewNode
@@ -106,7 +101,7 @@
   }
 
   /**
-   * Close Setup Modal by keys
+   * Close Setup Modal by key
    * @param {Event} event - The Event
    */
   function closeModalKeyHandler(event) {
