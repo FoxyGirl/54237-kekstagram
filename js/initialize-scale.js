@@ -16,15 +16,16 @@ window.createScale = (function () {
   var MIN_RESIZE = 25;
   var MAX_RESIZE = 100;
 
-  return function (element, step, startValue) {
+  return function (element, step, startValue, callback) {
     var decrementNode = element.querySelector('.upload-resize-controls-button-dec');
     var incrementNode = element.querySelector('.upload-resize-controls-button-inc');
     var resizeValueNode = element.querySelector('.upload-resize-controls-value');
-    var filterImagePreviewNode = document.querySelector('.filter-image-preview');
+    var changeScale = callback;
 
     return {
       init: function () {
-        changeImagePreviewScale(startValue);
+        changeValueScale(startValue);
+        changeScale(startValue);
 
         decrementNode.addEventListener('click', resizeDecImagePreviewHandler);
         incrementNode.addEventListener('click', resizeIncImagePreviewHandler);
@@ -36,33 +37,34 @@ window.createScale = (function () {
     };
 
     /**
-     * Resize with decreasing image preview
+     * Resize with decreasing
      * @private
      */
     function resizeDecImagePreviewHandler() {
       var currentValue = parseInt(resizeValueNode.value, 10);
       currentValue = currentValue - step < MIN_RESIZE ? MIN_RESIZE : currentValue - step;
-      changeImagePreviewScale(currentValue);
+      changeValueScale(currentValue);
+      changeScale(currentValue);
     }
 
     /**
-     * Resize with increasing image preview
+     * Resize with increasing
      * @private
      */
     function resizeIncImagePreviewHandler() {
       var currentValue = parseInt(resizeValueNode.value, 10);
       currentValue = currentValue + step > MAX_RESIZE ? MAX_RESIZE : currentValue + step;
-      changeImagePreviewScale(currentValue);
+      changeValueScale(currentValue);
+      changeScale(currentValue);
     }
 
     /**
-     * Change scale of filterImagePreviewNode and uploadResizeValue
+     * Change value uploadResizeValue
      * @private
-     * @param {number} scaleValue - The value for image scaling
+     * @param {number} scaleValue - The value for scaling
      */
-    function changeImagePreviewScale(scaleValue) {
+    function changeValueScale(scaleValue) {
       resizeValueNode.value = scaleValue + '%';
-      filterImagePreviewNode.style.transform = 'scale(' + scaleValue / 100 + ')';
     }
   };
 

@@ -13,11 +13,12 @@ window.initializeFilters = (function () {
   var uploadNode = document.querySelector('.upload-overlay');
   var uploadFilterControlsNode = uploadNode.querySelector('.upload-filter-controls');
   var filterControlsNode = document.getElementsByName('upload-filter');
-  var filterImagePreviewNode = uploadNode.querySelector('.filter-image-preview');
   var ENTER_KEY_CODE = 13;
   var SPACE_KEY_CODE = 32;
+  var applyFilter = null;
 
-  return function () {
+  return function (callback) {
+    applyFilter = callback;
     return {
       init: function () {
         uploadFilterControlsNode.addEventListener('click', filterClickHandler);
@@ -73,7 +74,7 @@ window.initializeFilters = (function () {
   function toggleFilter(control) {
     var filterName = control.id;
     filterName = filterName.replace('upload-', '');
-    filterImagePreviewNode.className = 'filter-image-preview' + ' ' + filterName;
+    applyFilter(filterName);
   }
 
   /**
