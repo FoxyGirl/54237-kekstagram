@@ -18,7 +18,8 @@ window.load = (function () {
     xhr = new XMLHttpRequest();
     newUrl = url;
     onLoadCallback = onLoad;
-    xhr.timeout = 20;
+    xhr.timeout = 2000;
+    xhr.responseType = 'json';
 
     xhr.addEventListener('load', function (event) {
       if (event.target.status >= 400) {
