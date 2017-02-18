@@ -25,7 +25,6 @@ window.createScale = (function () {
     return {
       init: function () {
         changeValueScale(startValue);
-        changeScale(startValue);
 
         decrementNode.addEventListener('click', resizeDecImagePreviewHandler);
         incrementNode.addEventListener('click', resizeIncImagePreviewHandler);
@@ -44,7 +43,6 @@ window.createScale = (function () {
       var currentValue = parseInt(resizeValueNode.value, 10);
       currentValue = currentValue - step < MIN_RESIZE ? MIN_RESIZE : currentValue - step;
       changeValueScale(currentValue);
-      changeScale(currentValue);
     }
 
     /**
@@ -55,7 +53,6 @@ window.createScale = (function () {
       var currentValue = parseInt(resizeValueNode.value, 10);
       currentValue = currentValue + step > MAX_RESIZE ? MAX_RESIZE : currentValue + step;
       changeValueScale(currentValue);
-      changeScale(currentValue);
     }
 
     /**
@@ -65,6 +62,10 @@ window.createScale = (function () {
      */
     function changeValueScale(scaleValue) {
       resizeValueNode.value = scaleValue + '%';
+
+      if (typeof changeScale === 'function') {
+        changeScale(scaleValue);
+      }
     }
   };
 

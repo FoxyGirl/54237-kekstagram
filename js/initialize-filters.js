@@ -74,7 +74,10 @@ window.initializeFilters = (function () {
   function toggleFilter(control) {
     var filterName = control.id;
     filterName = filterName.replace('upload-', '');
-    applyFilter(filterName);
+
+    if (typeof applyFilter === 'function') {
+      applyFilter(filterName);
+    }
   }
 
   /**
