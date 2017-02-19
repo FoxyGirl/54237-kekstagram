@@ -27,55 +27,32 @@ window.pictures = (function () {
 
     function onLoad(pictures) {
       pictures.forEach(function (picture) {
+        var showGaleryHandler = showGalery(picture);
         newPictureNode = pictureNode.cloneNode(true);
         newPictureNode.querySelector('img').src = picture.url;
         newPictureNode.querySelector('.picture-likes').textContent = picture.likes;
         newPictureNode.querySelector('.picture-comments').textContent = picture.comments.length;
-        // newPictureNode.addEventListener('click', showGaleryHandler);
-        // newPictureNode.addEventListener('keydown', showGaleryHandler);
-        var handler = showGaleryHandler.bind(picture);
-        newPictureNode.addEventListener('click', handler);
-        newPictureNode.addEventListener('keydown', handler);
+        newPictureNode.addEventListener('click', showGaleryHandler);
+        newPictureNode.addEventListener('keydown', showGaleryHandler);
 
         fragment.appendChild(newPictureNode);
-
-        // /**
-        //  * Close Gallery Modal
-        //  * @private
-        //  * @param {Event} event - The Event
-        //  */
-        // function showGaleryHandler(event) {
-        //   event.preventDefault();
-        //   if (window.utils.isActivationEvent(event) || event.type === 'click') {
-        //     window.showGallery(picture);
-        //   }
-        // }
       });
 
       picturesNode.appendChild(fragment);
 
-      // /**
-      //  * Close Gallery Modal
-      //  * @private
-      //  * @param {Event} event - The Event
-      //  */
-      // function showGaleryHandler(event, picture) {
-      //   event.preventDefault();
-      //   if (window.utils.isActivationEvent(event) || event.type === 'click') {
-      //     window.showGallery(picture);
-      //   }
-      // }
-
       /**
-       * Close Gallery Modal
+       * Show Gallery Modal
        * @private
-       * @param {Event} event - The Event
+       * @param {Object} picture - The Object with picture data.
+       * @return {Function} - Handler for Show Gallery Modal.
        */
-      function showGaleryHandler(event) {
-        event.preventDefault();
-        if (window.utils.isActivationEvent(event) || event.type === 'click') {
-          window.showGallery(this);
-        }
+      function showGalery(picture) {
+        return function (event) {
+          event.preventDefault();
+          if (window.utils.isActivationEvent(event) || event.type === 'click') {
+            window.showGallery(picture);
+          }
+        };
       }
 
     }
