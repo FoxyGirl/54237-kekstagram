@@ -12,11 +12,9 @@
 window.load = (function () {
   var xhr = null;
   var onLoadCallback = null;
-  var newUrl = null;
 
   return function (url, onLoad) {
     xhr = new XMLHttpRequest();
-    newUrl = url;
     onLoadCallback = onLoad;
     xhr.timeout = 2000;
     xhr.responseType = 'json';
@@ -34,7 +32,7 @@ window.load = (function () {
     xhr.addEventListener('error', errorHandler);
     xhr.addEventListener('timeout', errorHandler);
 
-    xhr.open('GET', newUrl);
+    xhr.open('GET', url);
     xhr.send();
 
     /**

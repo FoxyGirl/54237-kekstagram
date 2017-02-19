@@ -6,6 +6,7 @@
 /**
  * @module showGallery
  * @return {Function) - Show gallery, add and remove handlers.
+ * @return {Function) - Show gallery, add and remove handlersbind.
  * @param {Array} param - Data for gallery element.
  */
 window.showGallery = (function () {
