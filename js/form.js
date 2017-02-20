@@ -7,20 +7,30 @@
   var uploadNode = document.querySelector('.upload-overlay');
   var uploadFileNode = document.getElementById('upload-file');
   var uploadFileLabelNode = document.querySelector('.upload-file');
-  var uploadFilterForm = uploadNode.querySelector('.upload-filter');
+  var uploadFilterFormNode = uploadNode.querySelector('.upload-filter');
+  var uploadFormCancelNode = uploadNode.querySelector('.upload-form-cancel');
+  var uploadSelectImageNode = document.getElementById('upload-select-image');
   var scaleElemNode = uploadNode.querySelector('.upload-resize-controls');
+  var uploadResizeDecNode = uploadNode.querySelector('.upload-resize-controls-button-dec');
   var filterImagePreviewNode = uploadNode.querySelector('.filter-image-preview');
   var START_RESIZE = 100;
   var STEP_RESIZE = 25;
+  var prevFocusedElement = null;
   var scale = window.createScale(scaleElemNode, STEP_RESIZE, START_RESIZE, changeImagePreviewScale);
   var filters = window.initializeFilters(applyFilterImagePreview);
 
-  uploadFileLabelNode.addEventListener('keydown', onSetupKeydownHandler);
-
   uploadFileNode.addEventListener('change', function () {
-    window.openFormModal();
-    initUploadPopup();
+    openUploadForm();
   });
+
+  uploadFileLabelNode.addEventListener('keydown', function () {
+    if (window.utils.isActivationEvent(event)) {
+      event.currentTarget.click();
+    }
+  });
+
+  //  Create pictures block
+  window.pictures();
 
   /**
     * Change scale of filterImagePreviewNode
@@ -39,39 +49,43 @@
   }
 
   /**
-   * Handler for keydown.
-   * @param {Event} event - The Event.
+   * Open upload overlay pop-up
    */
-  function onSetupKeydownHandler(event) {
-    if (window.utils.isActivationEvent(event)) {
-      event.stopPropagation();
-      event.preventDefault();
-      initUploadPopup();
-      window.openFormModal(focusOpenButton);
-    }
-  }
+  function openUploadForm() {
+    prevFocusedElement = document.activeElement;
 
-  /**
-   * Callback function for Open Button focusing.
-   */
-  function focusOpenButton() {
-    uploadFileLabelNode.focus();
-  }
+    uploadFormCancelNode.addEventListener('click', removeUploadForm);
+    uploadFormCancelNode.addEventListener('keydown', removeKeyUploadForm);
+    uploadFilterFormNode.addEventListener('submit', closeSubmitModalHandler);
 
-  /**
-   * Init upload overlay pop-up
-   */
-  function initUploadPopup() {
-    uploadFilterForm.addEventListener('submit', closeSubmitModalHandler);
+    document.addEventListener('keydown', closeModalKeyHandler);
+    document.addEventListener('focus', lockModalHandler, true);
 
     scale.init();
     filters.init();
+
+    uploadSelectImageNode.classList.add('invisible');
+    uploadNode.classList.remove('invisible');
+    uploadResizeDecNode.focus();
+    uploadNode.setAttribute('aria-hidden', 'false');
   }
 
   /**
    * Remove upload overlay pop-up
    */
-  function removeUploadPopup() {
+  function removeUploadForm() {
+    uploadNode.classList.add('invisible');
+    uploadSelectImageNode.classList.remove('invisible');
+    uploadNode.setAttribute('aria-hidden', 'true');
+    uploadFileNode.value = '';
+    prevFocusedElement.focus();
+
+    uploadFormCancelNode.removeEventListener('click', removeUploadForm);
+    uploadFormCancelNode.removeEventListener('keydown', removeKeyUploadForm);
+    uploadFilterFormNode.removeEventListener('submit', closeSubmitModalHandler);
+
+    document.removeEventListener('keydown', closeModalKeyHandler);
+    document.removeEventListener('focus', lockModalHandler, true);
 
     scale.remove();
     filters.remove();
@@ -83,6 +97,36 @@
    */
   function closeSubmitModalHandler(event) {
     event.preventDefault();
-    removeUploadPopup();
+    removeUploadForm();
   }
+
+  /**
+   * Close Setup Modal by key
+   * @param {Event} event - The Event
+   */
+  function closeModalKeyHandler(event) {
+    if (window.utils.isDeactivationEvent(event)) {
+      removeUploadForm();
+    }
+  }
+
+  /**
+   * Close Setup Modal by keys.
+   * @param {Event} event - The Event.
+   */
+  function removeKeyUploadForm(event) {
+    if (window.utils.isActivationEvent(event)) {
+      removeUploadForm();
+    }
+  }
+
+  /**
+   * Lock Modal
+   */
+  function lockModalHandler() {
+    if (!uploadNode.contains(document.activeElement)) {
+      uploadResizeDecNode.focus();
+    }
+  }
+
 })();

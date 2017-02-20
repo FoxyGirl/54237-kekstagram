@@ -74,7 +74,10 @@ window.initializeFilters = (function () {
   function toggleFilter(control) {
     var filterName = control.id;
     filterName = filterName.replace('upload-', '');
-    applyFilter(filterName);
+
+    if (typeof applyFilter === 'function') {
+      applyFilter(filterName);
+    }
   }
 
   /**
@@ -84,8 +87,8 @@ window.initializeFilters = (function () {
    */
   function filterClickHandler(event) {
     if (event.keyCode === SPACE_KEY_CODE) {
-      event.preventDefault(); // Чтобы не скролилось окно
-      event.stopPropagation(); // Чтобы не дошло до window
+      event.preventDefault(); // Prevent window scrolling
+      event.stopPropagation(); // Prevent bibleing to window
     }
 
     if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE || event.type === 'click') {

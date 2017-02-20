@@ -5,6 +5,9 @@
 
 /**
  * @module utils
+ * @return {Object} - which has methods:
+ * isActivationEvent - Check Activation Event from KeyboardEvent.
+ * isDeactivationEvent - Check Deactivation Event from KeyboardEvent.
  */
 window.utils = (function () {
   var ENTER_KEY_CODE = 13;
