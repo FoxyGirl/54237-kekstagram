@@ -12,8 +12,6 @@
 window.showGallery = (function () {
   var galleryNode = document.querySelector('.gallery-overlay');
   var galleryCloseNode = galleryNode.querySelector('.gallery-overlay-close');
-  galleryCloseNode.setAttribute('role', 'button');
-  galleryCloseNode.setAttribute('tabindex', '1');
 
   return function (param) {
     galleryNode.classList.remove('invisible');
