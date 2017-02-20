@@ -48,9 +48,18 @@ window.pictures = (function () {
        */
       function showGalery(picture) {
         return function (event) {
-          event.preventDefault();
           if (window.utils.isActivationEvent(event) || event.type === 'click') {
-            window.showGallery(picture);
+            event.preventDefault();
+            var currentPhoto = event.currentTarget;
+            window.showGallery(picture, focusPhoto);
+          }
+
+          /**
+          * Focus Photo Callback
+          * @private
+          */
+          function focusPhoto() {
+            currentPhoto.focus();
           }
         };
       }
