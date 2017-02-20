@@ -35,9 +35,6 @@ window.showGallery = (function () {
     function closeGaleryHandler(event) {
       if (window.utils.isActivationEvent(event) || event.type === 'click') {
         closeGalery();
-        if (typeof doCallback === 'function') {
-          doCallback();
-        }
       }
     }
 
@@ -60,6 +57,10 @@ window.showGallery = (function () {
       galleryCloseNode.removeEventListener('keydown', closeGaleryHandler);
 
       document.removeEventListener('keydown', closeModalKeyHandler);
+
+      if (typeof doCallback === 'function') {
+        doCallback();
+      }
     }
   };
 })();

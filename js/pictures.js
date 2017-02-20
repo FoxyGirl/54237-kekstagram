@@ -11,6 +11,7 @@ window.pictures = (function () {
   var picturesNode = document.querySelector('.pictures');
   var templateNode = document.getElementById('picture-template');
   var pictureNode = templateNode.content.querySelector('.picture');
+  var filtersNode = document.querySelector('.filters');
   var newPictureNode = null;
   var url = 'https://intensive-javascript-server-myophkugvq.now.sh/kekstagram/data';
 
@@ -24,7 +25,6 @@ window.pictures = (function () {
      * @private
      * @param {Array} pictures - Data for picture elements.
      */
-
     function onLoad(pictures) {
       pictures.forEach(function (picture) {
         var showGaleryHandler = showGalery(picture);
