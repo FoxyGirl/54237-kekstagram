@@ -12,6 +12,7 @@ window.pictures = (function () {
   var templateNode = document.getElementById('picture-template');
   var pictureNode = templateNode.content.querySelector('.picture');
   var filtersNode = document.querySelector('.filters');
+  var SPACE_KEY_CODE = 32;
   var newPictureNode = null;
   var url = 'https://intensive-javascript-server-myophkugvq.now.sh/kekstagram/data';
 
@@ -86,11 +87,18 @@ window.pictures = (function () {
        * @param {Event} event - The Event
        */
       function filterClickHandler(event) {
+        if (event.keyCode === SPACE_KEY_CODE) {
+          event.preventDefault(); // Prevent window scrolling
+          event.stopPropagation(); // Prevent bubbling to window
+        }
+
         if (window.utils.isActivationEvent(event) || event.type === 'click') {
           var target = event.target;
           while (target !== filtersNode) {
             if (target.tagName === 'LABEL') {
               var filterInput = document.getElementById(target.getAttribute('for'));
+              clearCheckedInputs(filtersNode);
+              setCheckedInputs(filterInput);
               refreshPictures(filterInput);
               return;
             }
@@ -132,6 +140,28 @@ window.pictures = (function () {
        */
       function compareCommentsCount(a, b) {
         return b.comments.length - a.comments.length;
+      }
+
+      /**
+       * Clear checked attributes for inputs in DOM collection
+       * @private
+       * @param {Elements} inputs - DOM collection of inputs with radio or checkbox type
+       */
+      function clearCheckedInputs(inputs) {
+        [].forEach.call(inputs, function (input) {
+          input.checked = false;
+          filtersNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'false');
+        });
+      }
+
+      /**
+       * Set checked attributes for input
+       * @private
+       * @param {Element} input - DOM element input with radio or checkbox type
+       */
+      function setCheckedInputs(input) {
+        input.checked = true;
+        filtersNode.querySelector('[for="' + input.id + '"]').setAttribute('aria-checked', 'true');
       }
 
     }
