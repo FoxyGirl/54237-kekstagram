@@ -51,11 +51,11 @@ window.utils = (function () {
     }
     var newArray = [];
     var randomIndexArray = [];
-    var randomElementIndex = null;
+    var randomIndex = null;
     while (randomIndexArray.length < length) {
-      randomElementIndex = Math.floor(Math.random() * array.length);
-      if (randomIndexArray.indexOf(randomElementIndex) === -1) {
-        randomIndexArray.push(randomElementIndex);
+      randomIndex = Math.floor(Math.random() * array.length);
+      if (randomIndexArray.indexOf(randomIndex) === -1) {
+        randomIndexArray.push(randomIndex);
       }
     }
 
