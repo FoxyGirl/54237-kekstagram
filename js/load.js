@@ -11,11 +11,9 @@
  */
 window.load = (function () {
   var xhr = null;
-  var onLoadCallback = null;
 
   return function (url, onLoad) {
     xhr = new XMLHttpRequest();
-    onLoadCallback = onLoad;
     xhr.timeout = 2000;
     xhr.responseType = 'json';
 
@@ -23,8 +21,8 @@ window.load = (function () {
       if (event.target.status >= 400) {
         errorHandler('Failed to load data. Server returned status: ' + event.target.status);
       } else if (event.target.status >= 200) {
-        if (typeof onLoadCallback === 'function') {
-          onLoadCallback(event.target.response);
+        if (typeof onLoad === 'function') {
+          onLoad(event.target.response);
         }
       }
     });

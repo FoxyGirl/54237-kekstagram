@@ -27,40 +27,40 @@ window.showGallery = (function () {
     galleryCloseNode.addEventListener('keydown', closeGaleryHandler);
 
     document.addEventListener('keydown', closeModalKeyHandler);
-
-    /**
-     * Close Gallery Modal Handler
-     * @param {Event} event - The Event
-     */
-    function closeGaleryHandler(event) {
-      if (window.utils.isActivationEvent(event) || event.type === 'click') {
-        closeGalery();
-      }
-    }
-
-    /**
-     * Close Setup Modal by key
-     * @param {Event} event - The Event
-     */
-    function closeModalKeyHandler(event) {
-      if (window.utils.isDeactivationEvent(event)) {
-        closeGalery();
-      }
-    }
-
-    /**
-     * Close Gallery Modal
-     */
-    function closeGalery() {
-      galleryNode.classList.add('invisible');
-      galleryCloseNode.removeEventListener('click', closeGaleryHandler);
-      galleryCloseNode.removeEventListener('keydown', closeGaleryHandler);
-
-      document.removeEventListener('keydown', closeModalKeyHandler);
-
-      if (typeof doCallback === 'function') {
-        doCallback();
-      }
-    }
   };
+
+  /**
+   * Close Gallery Modal Handler
+   * @param {Event} event - The Event
+   */
+  function closeGaleryHandler(event) {
+    if (window.utils.isActivationEvent(event) || event.type === 'click') {
+      closeGalery();
+    }
+  }
+
+  /**
+   * Close Setup Modal by key
+   * @param {Event} event - The Event
+   */
+  function closeModalKeyHandler(event) {
+    if (window.utils.isDeactivationEvent(event)) {
+      closeGalery();
+    }
+  }
+
+  /**
+   * Close Gallery Modal
+   */
+  function closeGalery() {
+    galleryNode.classList.add('invisible');
+    galleryCloseNode.removeEventListener('click', closeGaleryHandler);
+    galleryCloseNode.removeEventListener('keydown', closeGaleryHandler);
+
+    document.removeEventListener('keydown', closeModalKeyHandler);
+
+    if (typeof doCallback === 'function') {
+      doCallback();
+    }
+  }
 })();
