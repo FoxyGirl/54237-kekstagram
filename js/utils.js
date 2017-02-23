@@ -8,6 +8,7 @@
  * @return {Object} - which has methods:
  * isActivationEvent - Check Activation Event from KeyboardEvent.
  * isDeactivationEvent - Check Deactivation Event from KeyboardEvent.
+ * getRandomArrayFromArray - Get new array of random elements from base array.
  */
 window.utils = (function () {
   var ENTER_KEY_CODE = 13;
@@ -16,7 +17,8 @@ window.utils = (function () {
 
   return {
     isActivationEvent: isActivationEvent,
-    isDeactivationEvent: isDeactivationEvent
+    isDeactivationEvent: isDeactivationEvent,
+    getRandomArrayFromArray: getRandomArrayFromArray
   };
 
   /**
@@ -35,6 +37,33 @@ window.utils = (function () {
    */
   function isDeactivationEvent(event) {
     return event.keyCode === ESCAPE_KEY_CODE;
+  }
+
+  /**
+   * Get new array of random elements from base array.
+   * @param {Array} array - The base array.
+   * @param {number} length - Length of new array. Must be <= length of base array.
+   * @return {Array} - New array.
+   */
+  function getRandomArrayFromArray(array, length) {
+    if (length > array.length) {
+      length = array.length;
+    }
+    var newArray = [];
+    var randomIndexArray = [];
+    var randomIndex = null;
+    while (randomIndexArray.length < length) {
+      randomIndex = Math.floor(Math.random() * array.length);
+      if (randomIndexArray.indexOf(randomIndex) === -1) {
+        randomIndexArray.push(randomIndex);
+      }
+    }
+
+    randomIndexArray.forEach(function (element) {
+      newArray.push(array[element]);
+    });
+
+    return newArray;
   }
 
 })();

@@ -13,7 +13,6 @@ window.initializeFilters = (function () {
   var uploadNode = document.querySelector('.upload-overlay');
   var uploadFilterControlsNode = uploadNode.querySelector('.upload-filter-controls');
   var filterControlsNode = document.getElementsByName('upload-filter');
-  var ENTER_KEY_CODE = 13;
   var SPACE_KEY_CODE = 32;
   var applyFilter = null;
 
@@ -88,10 +87,10 @@ window.initializeFilters = (function () {
   function filterClickHandler(event) {
     if (event.keyCode === SPACE_KEY_CODE) {
       event.preventDefault(); // Prevent window scrolling
-      event.stopPropagation(); // Prevent bibleing to window
+      event.stopPropagation(); // Prevent bubbling to window
     }
 
-    if (event.keyCode === ENTER_KEY_CODE || event.keyCode === SPACE_KEY_CODE || event.type === 'click') {
+    if (window.utils.isActivationEvent(event) || event.type === 'click') {
       var target = event.target;
       while (target !== uploadFilterControlsNode) {
         if (target.tagName === 'LABEL') {
